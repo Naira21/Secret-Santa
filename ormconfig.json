@@ -1,0 +1,12 @@
+// @ts-ignore
+
+{
+  "type": "mariadb",
+  "host": "localhost",
+  "port": 3306,
+  "username": "secret-santa",
+  "password": "",
+  "database": "ssanta",
+  "entities": ["src/entity/*.ts"],
+  "synchronize": true
+}
