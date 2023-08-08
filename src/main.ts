@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import express, { Request, Response } from 'express';
 import { AppDataSource } from './infrastructure/orm/typeorm/dataSource';
-import { User } from './domain/user/User';
+import { User } from './domain/user/user';
 
 const app = express();
 const port = 3000;
