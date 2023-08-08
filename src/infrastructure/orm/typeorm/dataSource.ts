@@ -1,6 +1,8 @@
 import { DataSource } from 'typeorm';
 
 export const AppDataSource = new DataSource({
+  //costructor
+  // getter має бути
   type: 'mariadb',
   host: 'localhost',
   port: 3306,
