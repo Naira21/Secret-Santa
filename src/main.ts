@@ -1,21 +1,40 @@
 import 'reflect-metadata';
-import express, { Request, Response } from 'express';
+import express, { Request, Response, Express } from 'express';
 import { dbConnection } from './infrastructure/mariaDB/index';
 
-const app = express();
-const port = 3000;
+class App {
+  private app: Express;
+  private port: number;
+
+  constructor() {
+    this.app = express();
+    this.port = 3000;
+  }
+
+  private useMiddlewares(): void {
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: false }));
+  }
+
+  public async runServer() {
+    this.useMiddlewares();
+
+    await dbConnection.connect();
+
+    this.app.listen(this.port, () => {
+      console.log(`Server is listening on port ${this.port}`);
+    });
+  }
+}
+
+const app = new App();
+app.runServer();
 
 // AppDataSource.initialize();
 // .then(() => {
 //   console.log('Connected to database');
 // })
 // .catch((error) => console.log('Error connecting to database:', error));
-
-dbConnection.connect();
-
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
-});
 
 // app.get('/users', async (req: Request, res: Response) => {
 //   const users = await AppDataSource.getRepository(User).find();
