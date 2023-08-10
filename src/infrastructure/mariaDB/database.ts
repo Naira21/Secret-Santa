@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { IMariaDBConnection } from './database.interface';
 
 // export const AppDataSource = new DataSource({
 //   //costructor
@@ -16,7 +17,7 @@ import { DataSource } from 'typeorm';
 //   migrations: [],
 // });
 
-export class DBConnection {
+export class DbConnection implements IMariaDBConnection {
   private dbConnection: DataSource;
 
   constructor() {
