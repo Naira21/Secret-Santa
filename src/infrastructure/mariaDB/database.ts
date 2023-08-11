@@ -1,22 +1,5 @@
 import { DataSource } from 'typeorm';
 import { IMariaDBConnection } from './database.interface';
-
-// export const AppDataSource = new DataSource({
-//   //costructor
-//   // getter має бути
-//   type: 'mariadb',
-//   host: 'localhost',
-//   port: 3306,
-//   username: 'root',
-//   password: '',
-//   database: 'ssanta',
-//   entities: ['src/entity/*.ts'],
-//   synchronize: true,
-//   logging: true,
-//   subscribers: [],
-//   migrations: [],
-// });
-
 export class DbConnection implements IMariaDBConnection {
   private dbConnection: DataSource;
 

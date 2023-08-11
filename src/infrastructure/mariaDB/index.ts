@@ -1,3 +1,3 @@
-import { DBConnection } from './database';
+import { DbConnection } from './database';
 
-export const dbConnection = new DBConnection();
+export const dbConnection = new DbConnection();
