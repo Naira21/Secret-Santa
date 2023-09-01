@@ -3,19 +3,19 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number | null;
+  private id: number | null;
 
   @Column({
     length: 50,
     type: 'varchar',
   })
-  name: string;
+  private name: string;
 
   @Column({
     length: 50,
     type: 'varchar',
   })
-  email: string;
+  private email: string;
 
   constructor(id: number | null, name: string, email: string) {
     this.id = id;
@@ -27,7 +27,7 @@ export class User {
     return this.id;
   }
 
-  public setId(id: number) {
+  public setId(id: number): void {
     this.id = id;
   }
 
@@ -35,7 +35,7 @@ export class User {
     return this.name;
   }
 
-  public setName(name: string) {
+  public setName(name: string): void {
     this.name = name;
   }
 
@@ -43,7 +43,7 @@ export class User {
     return this.email;
   }
 
-  public setEmail(email: string) {
+  public setEmail(email: string): void {
     this.email = email;
   }
 }
