@@ -1,19 +1,15 @@
-import { DataSource, EntityTarget } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { User } from '../../domain/user/user';
 
 export class UserRepository {
-  private entity: EntityTarget<User>;
+  constructor(private dataSource: DataSource) {}
 
-  constructor(private dbConnection: DataSource) {
-    this.entity = User;
-  }
+  // public async createUser(user: User): Promise<User> {
+  //   return await this.dataSource.manager.create(User, user);
+  // }
 
-  public saveUser(body: EntityTarget<User>) {
-    this.dbConnection.manager.save(body);
-  }
-
-  public async createUser(body: EntityTarget<User>) {
-    const createUser = await this.dbConnection.manager.create(body);
-    return createUser;
+  public async saveUser(body: User): Promise<User> {
+    const result = await this.dataSource.manager.save(body);
+    return result;
   }
 }
