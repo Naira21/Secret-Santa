@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import 'dotenv/config';
 import express, { Express } from 'express';
-import { DbConnection } from './infrastructure/mariaDB/database';
 import { UserRepository } from './infrastructure/repository/userRepository';
 import { IMariaDBConnection } from './infrastructure/mariaDB/database.interface';
 import { UserController } from './interfaces/controllers/userController';

@@ -4,9 +4,13 @@ import { UserRepository } from '../../../infrastructure/repository/userRepositor
 export class CreateUserService {
   constructor(private userRepository: UserRepository) {}
 
-  public async createUser(name: string, email: string): Promise<User> {
+  public async createUser(name: string, email: string): Promise<User | void> {
     const user = new User(null, name, email);
-    console.log(user);
+    const doesUserExist = await this.userRepository.checkIfUserWithEmailExists(
+      email,
+    );
+
+    if (doesUserExist) throw 'Forbidden. User with this email exists';
 
     return await this.userRepository.saveUser(user);
   }

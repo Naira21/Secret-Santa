@@ -1,15 +1,22 @@
-import { DataSource } from 'typeorm';
+import { DataSource, FindOptionsWhere } from 'typeorm';
 import { User } from '../../domain/user/user';
 
 export class UserRepository {
   constructor(private dataSource: DataSource) {}
 
-  // public async createUser(user: User): Promise<User> {
-  //   return await this.dataSource.manager.create(User, user);
-  // }
+  public async saveUser(user: User): Promise<User> {
+    const result = await this.dataSource.manager.save(user);
 
-  public async saveUser(body: User): Promise<User> {
-    const result = await this.dataSource.manager.save(body);
     return result;
+  }
+
+  public async checkIfUserWithEmailExists(email: string): Promise<Boolean> {
+    const doesUserExist = await this.dataSource.manager.findOne(User, {
+      where: {
+        email: email,
+      } as FindOptionsWhere<User>,
+    });
+
+    return doesUserExist ? true : false;
   }
 }
