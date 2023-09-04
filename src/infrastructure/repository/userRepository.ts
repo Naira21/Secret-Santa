@@ -1,7 +1,7 @@
 import { DataSource, FindOptionsWhere } from 'typeorm';
 import { User } from '../../domain/user/user';
-
-export class UserRepository {
+import { IUserRepository } from './userRepository.interface';
+export class UserRepository implements IUserRepository {
   constructor(private dataSource: DataSource) {}
 
   public async saveUser(user: User): Promise<User> {
