@@ -14,6 +14,4 @@ export class CreateUserService {
 
     return await this.userRepository.saveUser(user);
   }
-  // клас окремий коменд квери й прокинути його як боді
-  //очікую, що повернеться Юзер
 }

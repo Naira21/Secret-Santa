@@ -6,6 +6,7 @@ import { IMariaDBConnection } from './infrastructure/mariaDB/database.interface'
 import { UserController } from './interfaces/controllers/userController';
 import { CreateUserService } from './application/user/useCases/createUserService';
 import { UserRouter } from './interfaces/router/userRouter';
+import { handler } from './middleware/error/errorHandlerService';
 
 export class App {
   private app: Express;
@@ -41,7 +42,9 @@ export class App {
 
     this.app.use('/user', userRouter.getRouter());
 
-    //загальний раут, який відловлює усі
+    this.app.use((err: Error) => {
+      handler.handleError(err);
+    });
   }
 
   private useMiddlewares(): void {
