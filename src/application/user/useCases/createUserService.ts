@@ -1,19 +1,21 @@
 import { User } from '../../../domain/user/user';
+import { UserExistException } from '../exceptions/userExistException';
 import { UserRepository } from '../../../infrastructure/repository/userRepository';
 
 export class CreateUserService {
   constructor(private userRepository: UserRepository) {}
 
   public async createUser(name: string, email: string): Promise<User> {
-    try {
-      const user = new User(null, name, email);
-      console.log(user);
+    const doesUserExist = await this.userRepository.checkIfUserWithEmailExists(
+      email,
+    );
 
-      return await this.userRepository.saveUser(user);
-    } catch (error) {
-      throw error;
+    if (doesUserExist) {
+      throw new UserExistException('Bad request');
     }
+
+    const user = new User(null, name, email);
+
+    return await this.userRepository.saveUser(user);
   }
-  // клас окремий коменд квери й прокинути його як боді
-  //очікую, що повернеться Юзер
 }

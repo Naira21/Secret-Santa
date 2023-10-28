@@ -1,5 +1,3 @@
-//створює ДТО
-
 import { Response, Request, NextFunction } from 'express';
 import { CreateUserService } from '../../application/user/useCases/createUserService';
 
@@ -9,11 +7,10 @@ export class UserController {
   public async createUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, email } = req.body;
-      const newUser = await this.createUserService.createUser(name, email);
-
-      return res.status(200).json({ newUser });
+      const user = await this.createUserService.createUser(name, email);
+      return res.status(200).json({ user });
     } catch (error) {
-      return res.status(500).json('This user already exists!');
+      next(error);
     }
   }
 }

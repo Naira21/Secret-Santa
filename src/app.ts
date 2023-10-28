@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import 'dotenv/config';
-import express, { Express } from 'express';
-import { DbConnection } from './infrastructure/mariaDB/database';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import { UserRepository } from './infrastructure/repository/userRepository';
 import { IMariaDBConnection } from './infrastructure/mariaDB/database.interface';
 import { UserController } from './interfaces/controllers/userController';
 import { CreateUserService } from './application/user/useCases/createUserService';
 import { UserRouter } from './interfaces/router/userRouter';
+import { ErrorHandler } from './middleware/error/errorHandlerService';
 
 export class App {
   private app: Express;
@@ -30,6 +30,8 @@ export class App {
   }
 
   private createApp(): void {
+    const errHandler = new ErrorHandler();
+
     const userRepository = new UserRepository(
       this.dbConnection.getDataSource(),
     );
@@ -42,7 +44,11 @@ export class App {
 
     this.app.use('/user', userRouter.getRouter());
 
-    //загальний раут, який відловлює усі
+    this.app.use(
+      (err: Error, req: Request, res: Response, next: NextFunction) => {
+        errHandler.handle(err, req, res, next);
+      },
+    );
   }
 
   private useMiddlewares(): void {
@@ -50,42 +56,3 @@ export class App {
     this.app.use(express.urlencoded({ extended: false }));
   }
 }
-
-// AppDataSource.initialize();
-// .then(() => {
-//   console.log('Connected to database');
-// })
-// .catch((error) => console.log('Error connecting to database:', error));
-
-// app.get('/users', async (req: Request, res: Response) => {
-//   const users = await AppDataSource.getRepository(User).find();
-//   res.json(users);
-// });
-
-// app.get('/users/:id', async function (req: Request, res: Response) {
-//   const results = await AppDataSource.getRepository(User).findOneBy({
-//     id: 1,
-//   });
-//   return res.send(results);
-// });
-// app.post('/users', async function (req: Request, res: Response) {
-//   const user = await AppDataSource.getRepository(User).create({
-//     id: 1,
-//     name: 'Timber',
-//     email: 'Saw',
-//   });
-//   const results = await AppDataSource.getRepository(User).save(user);
-//   return res.send('User saved');
-// });
-
-// app.post('/users', async (req, res) => {
-//   const manager = AppDataSource.manager;
-//   const user = manager.create(User, {
-//     id: 1,
-//     name: 'Timber',
-//     email: 'Saw',
-//   });
-
-//   await manager.save(user);
-//   res.send('User saved');
-// });
