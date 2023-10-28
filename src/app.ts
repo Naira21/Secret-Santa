@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import 'dotenv/config';
-import express, { Express } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import { UserRepository } from './infrastructure/repository/userRepository';
 import { IMariaDBConnection } from './infrastructure/mariaDB/database.interface';
 import { UserController } from './interfaces/controllers/userController';
 import { CreateUserService } from './application/user/useCases/createUserService';
 import { UserRouter } from './interfaces/router/userRouter';
-import { handler } from './middleware/error/errorHandlerService';
+import { ErrorHandler } from './middleware/error/errorHandlerService';
 
 export class App {
   private app: Express;
@@ -30,6 +30,8 @@ export class App {
   }
 
   private createApp(): void {
+    const errHandler = new ErrorHandler();
+
     const userRepository = new UserRepository(
       this.dbConnection.getDataSource(),
     );
@@ -42,9 +44,11 @@ export class App {
 
     this.app.use('/user', userRouter.getRouter());
 
-    this.app.use((err: Error) => {
-      handler.handleError(err);
-    });
+    this.app.use(
+      (err: Error, req: Request, res: Response, next: NextFunction) => {
+        errHandler.handle(err, req, res, next);
+      },
+    );
   }
 
   private useMiddlewares(): void {

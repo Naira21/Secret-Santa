@@ -1,18 +1,26 @@
-import { AppError } from '../../exceptions/appError';
+import { Response, Request, NextFunction } from 'express';
+import { HttpCodes } from '../../lib/constants/httpCodes';
+import { UserExistException } from '../../application/user/exceptions/userExistException';
 
-class ErrorHandler {
-  public handleError(err: Error): void {
-    console.log('error', err);
+export class ErrorHandler {
+  public handle(
+    err: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): void {
+    switch (true) {
+      case err instanceof UserExistException:
+        res
+          .status(HttpCodes.BAD_REQUEST)
+          .json({ code: 'bad_request', message: err.message });
 
-    // await logger.logError(error);
-  }
+        return;
 
-  public isTrustedError(error: Error) {
-    if (error instanceof AppError) {
-      return error.isOperational;
+      default:
+        res
+          .status(HttpCodes.INTERNAL_SERVER_ERROR)
+          .json({ code: 'internal_server_error', message: err.message });
     }
-    return false;
   }
 }
-
-export const handler = new ErrorHandler();
